@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Dict, List, Optional
 
-# Vision Response Schemas
 class FaceRecognitionResponse(BaseModel):
     customer_id: int = Field(..., description="ID of recognized customer (-1 for unknown)")
     name: str = Field(..., description="Name of customer")
@@ -29,7 +28,6 @@ class CVOpsResponse(BaseModel):
     edges_image_base64: str = Field(..., description="Base64 encoded Canny edges image")
     bbox_image_base64: str = Field(..., description="Base64 encoded image with face bounding boxes")
 
-# NLP Request / Response Schemas
 class SentimentRequest(BaseModel):
     text: str = Field(..., min_length=1, description="Customer review/feedback text")
 
@@ -38,7 +36,6 @@ class SentimentResponse(BaseModel):
     confidence: float = Field(..., description="Classification probability score")
     probabilities: Dict[str, float] = Field(..., description="Probability distribution across sentiment classes")
 
-# Chatbot Request / Response Schemas
 class ChatbotRequest(BaseModel):
     message: str = Field(..., min_length=1, description="User query message")
 
@@ -48,7 +45,6 @@ class ChatbotResponse(BaseModel):
     confidence: float = Field(..., description="Intent classifier probability score")
     strategy: str = Field(..., description="Matching strategy used (rule, ml, or fallback)")
 
-# Dashboard Stats Schemas
 class VisitLogItem(BaseModel):
     timestamp: str
     customer_id: int

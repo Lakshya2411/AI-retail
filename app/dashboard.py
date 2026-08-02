@@ -9,13 +9,10 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 
-# Add project root to Python path so 'app' is importable by Streamlit
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# Set security environment variable in-script to bypass NLTK CWD check
 os.environ["NLTK_DISABLE_IMPORT_SECURITY"] = "1"
 
-# Page configuration
 st.set_page_config(
     page_title="Smart Retail Intelligence",
     page_icon="🛍️",
@@ -23,12 +20,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Base API Configuration
 API_BASE_URL = "http://localhost:8000"
 API_KEY = "retail-secret-key-2026"
 HEADERS = {"X-API-Key": API_KEY}
 
-# Check API status and decide mode (API vs Local)
 @st.cache_resource(show_spinner=False)
 def check_api_connection():
     try:
@@ -39,7 +34,6 @@ def check_api_connection():
         pass
     return False
 
-# Initialize local services if API is offline
 @st.cache_resource(show_spinner=False)
 def load_local_services():
     try:
@@ -56,13 +50,11 @@ def load_local_services():
         st.error(f"Failed to load local services fallback: {e}")
         return None
 
-# Determine connection mode
 is_api_online = check_api_connection()
 local_services = None
 if not is_api_online:
     local_services = load_local_services()
 
-# --- Custom Premium Dark Theme Styling (CSS Injection) ---
 st.markdown("""
 <style>
     /* Dark Slate Background & Glassmorphism Theme */
@@ -143,12 +135,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar layout
 with st.sidebar:
     st.image("https://images.unsplash.com/photo-1542744094-3a31f103e35f?q=80&w=200", use_container_width=True)
     st.markdown("<h2 style='text-align: center; color: #58a6ff;'>System Controls</h2>", unsafe_allow_html=True)
     
-    # Status indicators
     if is_api_online:
         st.markdown("<div style='text-align: center;'><span class='status-badge-api'>🟢 REST API CONNECTED</span></div>", unsafe_allow_html=True)
     else:
@@ -163,14 +153,12 @@ with st.sidebar:
     
     st.markdown("<hr style='border-color: rgba(48,54,61,0.8);'/>", unsafe_allow_html=True)
     
-    # Quick Action links
     st.markdown("### Quick Resources")
     st.markdown("[📖 API Swagger Docs (Local)](http://localhost:8000/docs)")
     st.markdown("[📂 GitHub Repository](https://github.com)")
     
     st.info("Ensure the FastAPI backend is running via `uvicorn app.main:app --reload` to unlock full API gateway features (REST client authentication, WebSocket stream preparation).")
 
-# Main Header
 col1, col2 = st.columns([0.8, 0.2])
 with col1:
     st.markdown("<h1 class='main-title'>Smart Retail Intelligence</h1>", unsafe_allow_html=True)
@@ -179,7 +167,6 @@ with col2:
     if st.button("🔄 Refresh Data"):
         st.rerun()
 
-# Fetch Stats Data from REST API or local files
 stats = None
 if is_api_online:
     try:
@@ -190,7 +177,6 @@ if is_api_online:
         st.warning(f"Error fetching stats from API: {e}")
         
 if stats is None:
-    # Build simulated/mock statistics locally
     from app.services.cv_service import VISIT_LOGS as v_logs
     from app.services.nlp_service import SENTIMENT_LOGS as s_logs
     from app.services.chatbot_service import CHATBOT_LOGS as c_logs
@@ -219,7 +205,6 @@ if stats is None:
         "chatbot_logs": list(reversed(c_logs))
     }
 
-# --- Row 1: KPI Analytics Cards ---
 c1, c2, c3, c4 = st.columns(4)
 with c1:
     st.markdown(f"""
@@ -256,7 +241,6 @@ with c4:
 
 st.write("")
 
-# --- Tabs for different features ---
 tab_vision, tab_nlp, tab_chatbot, tab_analytics = st.tabs([
     "📸 Computer Vision Suite", 
     "📈 Sentiment Analytics", 
@@ -264,7 +248,6 @@ tab_vision, tab_nlp, tab_chatbot, tab_analytics = st.tabs([
     "📊 Loyalty & Visit Analytics"
 ])
 
-# --- Tab A: Computer Vision Suite ---
 with tab_vision:
     st.markdown("### Image Processing and Deep Learning Suite")
     st.write("Test OpenCV image preprocessing operations, Face Recognition (LBPH), and Product Category classification (MobileNetV2).")
@@ -284,7 +267,6 @@ with tab_vision:
                 img_bytes = uploaded_file.read()
                 st.image(Image.open(io.BytesIO(img_bytes)), caption="Original Uploaded Image", use_container_width=True)
         else:
-            # Dropdown with sample faces/products for testing
             mock_option = st.selectbox(
                 "Select a mock test image:",
                 [
@@ -298,13 +280,11 @@ with tab_vision:
                 ]
             )
             
-            # Helper function to load synthetic image bytes
             if mock_option != "Select...":
                 if "Customer:" in mock_option:
                     cid = 1 if "Alice" in mock_option else (2 if "Bob" in mock_option else 3)
                     from app.models.train_face_recognizer import generate_synthetic_face
                     img_np = generate_synthetic_face(cid, 5)
-                    # Encode to png
                     import cv2
                     _, buffer = cv2.imencode(".png", img_np)
                     img_bytes = buffer.tobytes()
@@ -313,7 +293,6 @@ with tab_vision:
                     class_idx = 4 if "Grocery" in mock_option else (2 if "Electronic" in mock_option else 1)
                     from app.models.train_product_classifier import generate_synthetic_product
                     tensor = generate_synthetic_product(class_idx, 5)
-                    # Convert channel-first [0,1] tensor to numpy uint8 RGB
                     img_np = (tensor.permute(1, 2, 0).numpy() * 255).astype(np.uint8)
                     import cv2
                     _, buffer = cv2.imencode(".png", cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR))
@@ -322,7 +301,6 @@ with tab_vision:
         
     with cv_col2:
         if img_bytes is not None:
-            # Let the user run actions
             action_col1, action_col2, action_col3 = st.columns(3)
             
             with action_col1:
@@ -336,7 +314,6 @@ with tab_vision:
                 st.markdown("#### OpenCV Basics Preprocessing Steps")
                 with st.spinner("Processing image through OpenCV..."):
                     try:
-                        # Fetch preprocessing
                         if is_api_online:
                             files = {"file": ("image.png", img_bytes, "image/png")}
                             response = requests.post(f"{API_BASE_URL}/vision/preprocess-image", files=files, headers=HEADERS)
@@ -346,14 +323,12 @@ with tab_vision:
                             bbox_img = Image.open(io.BytesIO(base64.b64decode(res["bbox_image_base64"])))
                             num_faces = res["num_faces"]
                         else:
-                            # Local fallback
                             res = local_services["cv"].apply_cv_ops(img_bytes)
                             gray_img = Image.open(io.BytesIO(res["gray_bytes"]))
                             edges_img = Image.open(io.BytesIO(res["edges_bytes"]))
                             bbox_img = Image.open(io.BytesIO(res["bbox_bytes"]))
                             num_faces = res["num_faces"]
                             
-                        # Show preprocessed columns
                         p_col1, p_col2 = st.columns(2)
                         with p_col1:
                             st.image(gray_img, caption="1. Grayscale & Resized", use_container_width=True)
@@ -375,7 +350,6 @@ with tab_vision:
                         else:
                             res = local_services["cv"].recognize_customer(img_bytes)
                             
-                        # Display result cards
                         if res.get("recognized", False):
                             st.balloons()
                             st.markdown(f"""
@@ -411,7 +385,6 @@ with tab_vision:
                         else:
                             res = local_services["cv"].classify_product(img_bytes)
                             
-                        # Show prediction and bar chart
                         st.success(f"Predicted Category: **{res['predicted_category'].upper()}** (Confidence: {res['confidence_score'] * 100:.2f}%)")
                         
                         probs = res["category_probabilities"]
@@ -420,7 +393,6 @@ with tab_vision:
                     except Exception as e:
                         st.error(f"Error during product classification: {e}")
             
-            # Form to register new loyalty customer
             if st.session_state.get("show_register", False) and st.session_state.get("temp_img_bytes") is not None:
                 st.write("---")
                 st.markdown("### 📝 Register New Loyalty Profile")
@@ -449,7 +421,6 @@ with tab_vision:
                                         else:
                                             st.error(f"Registration failed: {response.json().get('detail', 'Unknown error')}")
                                     else:
-                                        # Local fallback
                                         reg_res = local_services["cv"].register_customer(st.session_state.temp_img_bytes, new_cust_name)
                                         if "status" in reg_res and reg_res["status"] == "error":
                                             st.error(reg_res["message"])
@@ -463,7 +434,6 @@ with tab_vision:
         else:
             st.info("👈 Please upload an image or choose a live camera mock sample in the left column to run predictions.")
 
-# --- Tab B: Sentiment Analytics ---
 with tab_nlp:
     st.markdown("### Customer Review Sentiment Classifier")
     st.write("Type a customer review or purchase feedback to predict the sentiment (Positive, Negative, Neutral) using the TF-IDF + Logistic Regression pipeline.")
@@ -494,7 +464,6 @@ with tab_nlp:
                     confidence = res["confidence"]
                     probs = res["probabilities"]
                     
-                    # Sentiment color card
                     sentiment_color = "#38ef7d" if sentiment == "positive" else ("#f85149" if sentiment == "negative" else "#f5af19")
                     
                     st.markdown(f"""
@@ -513,32 +482,26 @@ with tab_nlp:
         else:
             st.info("Write some feedback text in the text box and press analyze to test model classification.")
 
-# --- Tab C: Support Chatbot ---
 with tab_chatbot:
     st.markdown("### FAQ Hybrid Chatbot Widget")
     st.write("Chat with our smart support bot. It resolves shipping tracking, shop times, and return requests using exact rule matching with ML intent fallback.")
     
-    # Store chat history in streamlit state to show messaging bubbles
     if "messages" not in st.session_state:
         st.session_state.messages = [
             {"role": "assistant", "content": "Hello! I am your Smart Retail assistant. Ask me about store hours, return policies, order tracking, or payment methods!"}
         ]
         
-    # Display chat history
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.write(msg["content"])
             
-    # User chat input
     user_query = st.chat_input("Ask a question (e.g. 'when do you close today?' or 'track my order')")
     
     if user_query:
-        # Display user bubble
         with st.chat_message("user"):
             st.write(user_query)
         st.session_state.messages.append({"role": "user", "content": user_query})
         
-        # Get bot response
         with st.spinner("Thinking..."):
             try:
                 if is_api_online:
@@ -553,7 +516,6 @@ with tab_chatbot:
                 strategy = res["strategy"]
                 conf = res["confidence"]
                 
-                # Display bot bubble
                 with st.chat_message("assistant"):
                     st.write(bot_reply)
                     st.caption(f"Intent classified: **{intent}** | Confidence: **{conf:.2f}** | Strategy: **{strategy.upper()}**")
@@ -562,7 +524,6 @@ with tab_chatbot:
             except Exception as e:
                 st.error(f"Error contacting chatbot service: {e}")
 
-# --- Tab D: Loyalty & Visit Analytics ---
 with tab_analytics:
     st.markdown("### Store Loyalty Analytics Dashboard")
     st.write("Aggregated visual reporting of customer demographics, loyalty visits, and sentiment health drift.")

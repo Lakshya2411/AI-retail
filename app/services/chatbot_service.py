@@ -6,10 +6,8 @@ import joblib
 import nltk
 from nltk.stem import WordNetLemmatizer
 
-# Set security environment variable in-script to bypass NLTK CWD check
 os.environ["NLTK_DISABLE_IMPORT_SECURITY"] = "1"
 
-# Global log of chatbot chat history for dashboard display
 CHATBOT_LOGS = [
     {"timestamp": "2026-08-02 09:10", "query": "hello", "response": "Hi there! How can I help you today?", "intent": "greeting"},
     {"timestamp": "2026-08-02 10:15", "query": "when does the shop open", "response": "Our stores are open Monday through Saturday from 9:00 AM to 9:00 PM, and Sundays from 10:00 AM to 6:00 PM.", "intent": "store_hours"}
@@ -24,13 +22,11 @@ class ChatbotService:
         self.model_path = os.path.join(self.models_dir, "chatbot_model.pkl")
         self.vectorizer_path = os.path.join(self.models_dir, "chatbot_vectorizer.pkl")
         
-        # Load NLTK
         nltk.download('punkt', quiet=True)
         nltk.download('wordnet', quiet=True)
         
         self.lemmatizer = WordNetLemmatizer()
         
-        # Load intents database
         self.intents_data = {}
         if os.path.exists(self.intents_path):
             with open(self.intents_path, "r", encoding="utf-8") as f:
@@ -38,7 +34,6 @@ class ChatbotService:
         else:
             print("[Chatbot Service] Warning: intents.json file not found.")
             
-        # Load classification models
         self.model = None
         self.vectorizer = None
         if os.path.exists(self.model_path) and os.path.exists(self.vectorizer_path):
@@ -81,7 +76,6 @@ class ChatbotService:
             
         cleaned = self.clean_text(message)
         
-        # Rule 1: Exact matches or keyword check for greetings
         greetings_keywords = ["hi", "hello", "hey", "greetings", "howdy", "good morning", "good day"]
         words_set = set(cleaned.split())
         if any(greet in words_set for greet in greetings_keywords):
@@ -94,7 +88,6 @@ class ChatbotService:
                 "strategy": "rule"
             }
             
-        # Rule 2: Keyword check for goodbye
         goodbye_keywords = ["bye", "goodbye", "exit", "quit", "see you"]
         if any(bye in words_set for bye in goodbye_keywords):
             reply = self.get_intent_response("goodbye")
@@ -106,7 +99,6 @@ class ChatbotService:
                 "strategy": "rule"
             }
             
-        # Rule 3: Keyword check for order status
         order_keywords = ["track", "package", "shipment", "delivery", "order"]
         if any(word in words_set for word in order_keywords):
             reply = self.get_intent_response("order_status")
@@ -118,7 +110,6 @@ class ChatbotService:
                 "strategy": "rule"
             }
 
-        # Rule 4: Keyword check for return policy
         return_keywords = ["return", "refund", "exchange", "returned", "policy"]
         if any(word in words_set for word in return_keywords):
             reply = self.get_intent_response("return_policy")
@@ -130,7 +121,6 @@ class ChatbotService:
                 "strategy": "rule"
             }
 
-        # Rule 5: Keyword check for store hours
         hours_keywords = ["hour", "hours", "open", "close", "timing", "timings", "weekend", "weekends"]
         if any(word in words_set for word in hours_keywords):
             reply = self.get_intent_response("store_hours")
@@ -142,7 +132,6 @@ class ChatbotService:
                 "strategy": "rule"
             }
 
-        # Rule 6: Keyword check for payment methods
         payment_keywords = ["payment", "pay", "card", "cash", "paypal", "apple", "google"]
         if any(word in words_set for word in payment_keywords):
             reply = self.get_intent_response("payment_methods")
@@ -154,7 +143,6 @@ class ChatbotService:
                 "strategy": "rule"
             }
 
-        # Rule 7: Keyword check for contact support
         contact_keywords = ["contact", "support", "call", "phone", "email", "help", "agent", "human", "person"]
         if any(word in words_set for word in contact_keywords):
             reply = self.get_intent_response("contact_support")
@@ -166,7 +154,6 @@ class ChatbotService:
                 "strategy": "rule"
             }
             
-        # Fallback to ML classification
         if self.model is None or self.vectorizer is None:
             reply = "Our automated bot is offline, but you can email us at support@smartretail.com for help!"
             self._log_chat(message, reply, "fallback")
@@ -180,12 +167,10 @@ class ChatbotService:
         vectorized = self.vectorizer.transform([cleaned])
         prediction = self.model.predict(vectorized)[0]
         
-        # Determine classification probability/confidence
         probabilities = self.model.predict_proba(vectorized)[0]
         class_idx = list(self.model.classes_).index(prediction)
         confidence = float(probabilities[class_idx])
         
-        # Confidence threshold for matching intent
         confidence_threshold = 0.40
         
         if confidence >= confidence_threshold:

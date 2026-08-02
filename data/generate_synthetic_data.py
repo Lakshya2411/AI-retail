@@ -1,7 +1,6 @@
 import csv
 import random
 
-# Seed for reproducibility
 random.seed(42)
 
 positives = [
@@ -73,20 +72,16 @@ neutrals = [
     "Satisfactory, but I expected slightly better material."
 ]
 
-# Generate 200 samples by mixing templates and adding small variations
 reviews = []
 
-# Generate Positives (80 samples)
 for i in range(80):
     review = random.choice(positives)
-    # Add minor variations
     if i % 3 == 0:
         review = review + " Highly recommend!"
     elif i % 3 == 1:
         review = "Wow! " + review
     reviews.append((review, "positive"))
 
-# Generate Negatives (70 samples)
 for i in range(70):
     review = random.choice(negatives)
     if i % 3 == 0:
@@ -95,7 +90,6 @@ for i in range(70):
         review = "Disaster. " + review
     reviews.append((review, "negative"))
 
-# Generate Neutrals (50 samples)
 for i in range(50):
     review = random.choice(neutrals)
     if i % 3 == 0:
@@ -104,10 +98,8 @@ for i in range(50):
         review = "Just ok. " + review
     reviews.append((review, "neutral"))
 
-# Shuffle dataset
 random.shuffle(reviews)
 
-# Write to CSV
 with open("data/reviews.csv", mode="w", newline="", encoding="utf-8") as f:
     writer = csv.writer(f)
     writer.writerow(["Review", "Sentiment"])

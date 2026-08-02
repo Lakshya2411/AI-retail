@@ -21,7 +21,6 @@ async def preprocess_image(request: Request, file: UploadFile = File(...)):
         cv_service = request.app.state.cv_service
         res = cv_service.apply_cv_ops(content)
         
-        # Base64 encode for json transmission
         gray_b64 = base64.b64encode(res["gray_bytes"]).decode('utf-8')
         edges_b64 = base64.b64encode(res["edges_bytes"]).decode('utf-8')
         bbox_b64 = base64.b64encode(res["bbox_bytes"]).decode('utf-8')
@@ -50,7 +49,6 @@ async def recognize_face(request: Request, file: UploadFile = File(...)):
         res = cv_service.recognize_customer(content)
         
         if "status" in res and res["status"] in ["error", "no_face_detected"]:
-            # Standard empty/unknown response format
             return FaceRecognitionResponse(
                 customer_id=-1,
                 name="Unknown",

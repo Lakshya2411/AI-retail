@@ -5,10 +5,8 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-# Set security environment variable in-script to bypass NLTK CWD check
 os.environ["NLTK_DISABLE_IMPORT_SECURITY"] = "1"
 
-# Global log of feedback sentiment analysis for dashboard charts
 SENTIMENT_LOGS = [
     {"timestamp": "2026-08-02 09:05", "text": "I love the quick customer checkout!", "sentiment": "positive", "confidence": 0.92},
     {"timestamp": "2026-08-02 10:12", "text": "The clothes fit perfectly, five stars.", "sentiment": "positive", "confidence": 0.98},
@@ -22,7 +20,6 @@ class NLPService:
         self.model_path = os.path.join(self.models_dir, "sentiment_model.pkl")
         self.vectorizer_path = os.path.join(self.models_dir, "vectorizer.pkl")
         
-        # Download NLTK data programmatically if cached missing
         nltk.download('punkt', quiet=True)
         nltk.download('wordnet', quiet=True)
         nltk.download('stopwords', quiet=True)
@@ -46,13 +43,9 @@ class NLPService:
     def clean_text(self, text):
         if not text:
             return ""
-        # Lowercase
         text = text.lower()
-        # Remove punctuation & numbers
         text = re.sub(r'[^a-zA-Z\s]', '', text)
-        # Tokenize
         words = nltk.word_tokenize(text)
-        # Remove stopwords and lemmatize
         cleaned_words = [self.lemmatizer.lemmatize(w) for w in words if w not in self.stop_words]
         return ' '.join(cleaned_words)
 
@@ -62,7 +55,6 @@ class NLPService:
             
         cleaned = self.clean_text(text)
         
-        # Check if the text is empty after cleaning
         if not cleaned.strip():
             return {
                 "sentiment": "neutral",
@@ -72,15 +64,12 @@ class NLPService:
             
         vectorized = self.vectorizer.transform([cleaned])
         
-        # Predict class
         prediction = self.model.predict(vectorized)[0]
         
-        # Calculate probabilities
         probabilities = self.model.predict_proba(vectorized)[0]
         class_idx = list(self.model.classes_).index(prediction)
         confidence = float(probabilities[class_idx])
         
-        # Log feedback for dashboard analytics
         import time
         timestamp = time.strftime("%Y-%m-%d %H:%M")
         SENTIMENT_LOGS.append({

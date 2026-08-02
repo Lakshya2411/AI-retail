@@ -1,1 +1,1 @@
-# Smart Retail App Package
+

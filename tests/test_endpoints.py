@@ -9,12 +9,10 @@ HEADERS = {"X-API-Key": API_KEY}
 
 @pytest.fixture(scope="module")
 def client():
-    # Use context manager to trigger lifespan events (startup/shutdown)
     with TestClient(app) as c:
         yield c
 
 def get_mock_image():
-    # Helper to generate a basic 100x100 solid color image in PNG format
     img = Image.new("RGB", (100, 100), color=(100, 100, 100))
     buf = io.BytesIO()
     img.save(buf, format="PNG")
@@ -22,10 +20,9 @@ def get_mock_image():
 
 def test_root_redirect(client):
     response = client.get("/", follow_redirects=False)
-    assert response.status_code == 307  # Redirect to docs
+    assert response.status_code == 307
 
 def test_api_key_unauthorized(client):
-    # Call protected endpoint without API Key header
     response = client.post("/nlp/analyze-sentiment", json={"text": "Excellent service!"})
     assert response.status_code == 403
     assert "Unauthorized" in response.json()["detail"]
@@ -79,7 +76,7 @@ def test_vision_recognize_face(client):
     assert response.status_code == 200
     res_data = response.json()
     assert "customer_id" in res_data
-    assert res_data["customer_id"] == -1  # Solid color image will not detect a face and return -1/Unknown
+    assert res_data["customer_id"] == -1
     assert res_data["recognized"] is False
 
 def test_vision_classify_product(client):

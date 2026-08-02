@@ -4,7 +4,6 @@ from fastapi import FastAPI, Depends, Header, HTTPException, Security, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
-# Set security environment variable in-script to bypass NLTK CWD check
 os.environ["NLTK_DISABLE_IMPORT_SECURITY"] = "1"
 
 from app.services.cv_service import CVService, VISIT_LOGS
@@ -13,7 +12,6 @@ from app.services.chatbot_service import ChatbotService, CHATBOT_LOGS
 from app.routers import vision, nlp, chatbot
 from app.schemas import StatsResponse
 
-# Define simulated API Key credentials
 API_KEY = "retail-secret-key-2026"
 
 async def verify_api_key(x_api_key: str = Header(None, description="API Key header for authentication")):
@@ -26,14 +24,12 @@ async def verify_api_key(x_api_key: str = Header(None, description="API Key head
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Load ML models once and attach to application state
     print("Initializing Smart Retail Services and loading models...")
     app.state.cv_service = CVService()
     app.state.nlp_service = NLPService()
     app.state.chatbot_service = ChatbotService()
     print("Smart Retail Services initialized.")
     yield
-    # Shutdown: Clean up resources if necessary
     print("Shutting down Smart Retail Services...")
 
 app = FastAPI(
@@ -43,7 +39,6 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS middleware configuration for web integration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -52,17 +47,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Root endpoint redirects to API docs
 @app.get("/", include_in_schema=False)
 async def docs_redirect():
     return RedirectResponse(url="/docs")
 
-# Include service routers with security dependencies applied
 app.include_router(vision.router, dependencies=[Depends(verify_api_key)])
 app.include_router(nlp.router, dependencies=[Depends(verify_api_key)])
 app.include_router(chatbot.router, dependencies=[Depends(verify_api_key)])
 
-# Public Analytics stats endpoint (called by frontend/Streamlit dashboard)
 @app.get("/dashboard/stats", response_model=StatsResponse, tags=["Dashboard Analytics"])
 async def get_dashboard_stats():
     """
