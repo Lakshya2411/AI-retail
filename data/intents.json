@@ -1,0 +1,127 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hello",
+        "Hey",
+        "Is anyone there?",
+        "Good day",
+        "Greetings",
+        "Howdy",
+        "Hi there"
+      ],
+      "responses": [
+        "Hello! Welcome to Smart Retail Support. How can I assist you today?",
+        "Hi there! How can I help you today?",
+        "Greetings! What can I do for you today?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Bye",
+        "See you later",
+        "Goodbye",
+        "I am leaving",
+        "Have a good day",
+        "Thanks, bye",
+        "Quit",
+        "Exit"
+      ],
+      "responses": [
+        "Thank you for shopping with us! Have a wonderful day!",
+        "Goodbye! Feel free to reach out if you need anything else.",
+        "Bye! Hope to see you again soon."
+      ]
+    },
+    {
+      "tag": "order_status",
+      "patterns": [
+        "Where is my order?",
+        "Track my package",
+        "How can I check my order status?",
+        "When will my delivery arrive?",
+        "Where is my shipment?",
+        "Order status query",
+        "Has my order shipped yet?",
+        "Delivery tracking details"
+      ],
+      "responses": [
+        "You can track your order using the link sent to your registered email, or by logging into your account dashboard and navigating to 'My Orders'.",
+        "To check your package location, please enter your Order ID on our tracking page or check the shipping confirmation SMS.",
+        "Your order status is updated in real-time in your customer account page."
+      ]
+    },
+    {
+      "tag": "return_policy",
+      "patterns": [
+        "How do I return an item?",
+        "What is your refund policy?",
+        "Can I get a refund?",
+        "Return policy guidelines",
+        "How long do I have to return something?",
+        "Do you offer free returns?",
+        "Damaged item return",
+        "Exchange policy"
+      ],
+      "responses": [
+        "We offer a 30-day return policy for unused items in original packaging. You can print a free return label from our website.",
+        "Refunds are processed to the original payment method within 5-7 business days after we receive your returned item.",
+        "Yes, you can return items within 30 days of purchase. Return shipping is free for all loyalty club members."
+      ]
+    },
+    {
+      "tag": "store_hours",
+      "patterns": [
+        "What are your store hours?",
+        "When do you open?",
+        "When do you close?",
+        "Operating hours",
+        "Are you open on weekends?",
+        "Store timing today",
+        "What time does the retail shop open?"
+      ],
+      "responses": [
+        "Our stores are open Monday through Saturday from 9:00 AM to 9:00 PM, and Sundays from 10:00 AM to 6:00 PM.",
+        "We are open daily. Weekdays: 9 AM - 9 PM. Sundays: 10 AM - 6 PM.",
+        "Standard retail hours are 9:00 AM to 9:00 PM today."
+      ]
+    },
+    {
+      "tag": "payment_methods",
+      "patterns": [
+        "What payment options do you support?",
+        "Can I pay with credit card?",
+        "Do you accept Apple Pay?",
+        "Do you take cash?",
+        "Is PayPal supported?",
+        "Payment methods accepted",
+        "How can I pay for my purchase?"
+      ],
+      "responses": [
+        "We accept all major credit/debit cards (Visa, MasterCard, Amex), Apple Pay, Google Pay, PayPal, and cash in stores.",
+        "We support credit cards, debit cards, PayPal, and contactless payment methods like Apple Pay and Google Pay.",
+        "You can pay online using credit cards or PayPal. In-store payments support cards, cash, and digital wallets."
+      ]
+    },
+    {
+      "tag": "contact_support",
+      "patterns": [
+        "How can I contact support?",
+        "Talk to a human",
+        "Customer care phone number",
+        "Customer service email",
+        "I need help from a real person",
+        "Speak to agent",
+        "Call customer support"
+      ],
+      "responses": [
+        "You can contact our customer care via email at support@smartretail.com or call us toll-free at 1-800-555-0199 (Mon-Fri 9am-5pm).",
+        "Our support team can be reached at support@smartretail.com. If you wish to speak to an agent, please call 1-800-555-0199.",
+        "To speak with an agent, please dial our customer service hotline at 1-800-555-0199."
+      ]
+    }
+  ]
+}
