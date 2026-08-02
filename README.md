@@ -174,18 +174,3 @@ The containerized Docker build is multi-stage and optimized to support either th
 
 ---
 
-## 7. Ethics, Consent, Privacy, & Bias Report
-
-Deploying facial recognition technologies (FRT) in public retail spaces poses significant ethical, legal, and social concerns. A production-ready Capstone project must systematically detail these implications.
-
-### A. Consent & Legal Frameworks (GDPR/CCPA Compliance)
-Biometric data is classified as "Sensitive Personal Information" under frameworks like the General Data Protection Regulation (GDPR - Article 9) and the California Consumer Privacy Act (CCPA/CPRA). 
-- **Opt-In Requirement**: Stores cannot capture, process, or search biometric signatures without explicit, unambiguous, and freely given consent (GDPR Opt-In). Facial templates must not be created unless the customer registers for the loyalty system and signs a biometric disclosure.
-- **Right to Erasure (Right to be Forgotten)**: Customers must have an easily accessible mechanism to delete their facial signatures (`face_db.pkl`) and transaction logs instantly.
-- **Physical Signage**: Public entrances must display high-visibility warnings informing shoppers that face cameras are active, explaining the business purpose, and highlighting how to bypass the sensors.
-
-### B. Data Minimization & Security
-- **Biometric Templates vs. Raw Images**: Best practice dictations specify that *raw image feeds must never be stored*. The system must instantly discard the pixel frame as soon as mathematical biometric coordinates (or LBPH histograms) are extracted.
-- **Encryption**: Biometric database records (`face_db.pkl`) must be encrypted at rest and in transit using industry-standard protocols (AES-256).
-
-
