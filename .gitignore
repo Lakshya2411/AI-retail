@@ -1,0 +1,36 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+pyvenv.cfg
+
+# Python Cache & Compiled Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Model Weights & Compiled Artifacts (large binaries, should not be in git)
+app/models/*.pt
+app/models/*.xml
+app/models/*.pkl
+
+# Testing & Coverage Caching
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor & IDE Settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS Files
+Thumbs.db
+Desktop.ini
+.DS_Store
