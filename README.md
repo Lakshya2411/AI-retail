@@ -188,10 +188,4 @@ Biometric data is classified as "Sensitive Personal Information" under framework
 - **Biometric Templates vs. Raw Images**: Best practice dictations specify that *raw image feeds must never be stored*. The system must instantly discard the pixel frame as soon as mathematical biometric coordinates (or LBPH histograms) are extracted.
 - **Encryption**: Biometric database records (`face_db.pkl`) must be encrypted at rest and in transit using industry-standard protocols (AES-256).
 
-### C. Algorithmic Bias and Demographic Fairness
-Facial detection and recognition systems are historically documented to suffer from high demographic bias, displaying significantly higher false-positive and false-negative rates for women and dark-skinned individuals (e.g., as exposed by the NIST Facial Recognition Vendor Test).
-- **LBPH and Haar Cascade Limitations**: Traditional techniques like Haar Cascades and Local Binary Patterns (LBP) are sensitive to illumination changes, angles, and skin tones. Shadows on darker skin can lead to high false rejection rates.
-- **Mitigation Strategies**:
-  1. Regular audits using diverse evaluation benchmarks (e.g., LFW, FairFace).
-  2. Operating with conservative confidence score thresholds to avoid misidentifying a new visitor as an existing member (false positive), which could compromise account security.
-  3. Seamless manual fallback (e.g., manual barcode scans or phone number inputs) to ensure guests who are not recognized are not denied loyalty rewards.
+
