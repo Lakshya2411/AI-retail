@@ -131,7 +131,7 @@ Start the FastAPI server using `uvicorn`:
 uvicorn app.main:app --reload
 ```
 - **API Documentation**: Open [http://localhost:8000/docs](http://localhost:8000/docs) in your browser to access the auto-generated Swagger UI.
-- **API Key Security**: The vision, NLP, and chatbot endpoints require the header `X-API-Key: retail-secret-key-2026`.
+- **API Key Security**: The vision, NLP, and chatbot endpoints require an `X-API-Key` header. Set the key with the `RETAIL_API_KEY` environment variable (defaults to `dev-only-key` for local development; always set a real value in production).
 
 ### Step 2: Run the Streamlit Dashboard
 Launch the dashboard in a separate shell window:

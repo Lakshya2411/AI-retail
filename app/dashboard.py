@@ -21,7 +21,7 @@ st.set_page_config(
 )
 
 API_BASE_URL = "http://localhost:8000"
-API_KEY = "retail-secret-key-2026"
+API_KEY = os.getenv("RETAIL_API_KEY", "dev-only-key")
 HEADERS = {"X-API-Key": API_KEY}
 
 @st.cache_resource(show_spinner=False)

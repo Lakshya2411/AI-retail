@@ -12,7 +12,7 @@ from app.services.chatbot_service import ChatbotService, CHATBOT_LOGS
 from app.routers import vision, nlp, chatbot
 from app.schemas import StatsResponse
 
-API_KEY = "retail-secret-key-2026"
+API_KEY = os.getenv("RETAIL_API_KEY", "dev-only-key")
 
 async def verify_api_key(x_api_key: str = Header(None, description="API Key header for authentication")):
     if x_api_key != API_KEY:

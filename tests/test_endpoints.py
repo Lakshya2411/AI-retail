@@ -1,10 +1,11 @@
+import os
 import io
 import pytest
 from fastapi.testclient import TestClient
 from PIL import Image
 from app.main import app
 
-API_KEY = "retail-secret-key-2026"
+API_KEY = os.getenv("RETAIL_API_KEY", "dev-only-key")
 HEADERS = {"X-API-Key": API_KEY}
 
 @pytest.fixture(scope="module")
